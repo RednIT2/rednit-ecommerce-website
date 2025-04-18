@@ -9,7 +9,7 @@ const shoeRoute = require('./routes/shoeRoute');
 const userRoute = require('./routes/userRoute');
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT;
 
 // Kết nối MongoDB Atlas
 mongoose.connect(process.env.MONGODB_URI, {
