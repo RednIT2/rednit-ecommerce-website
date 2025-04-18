@@ -83,16 +83,16 @@ export function Products() {
                 <Update shoe={shoe} onSave={handleSave} />
               ) : (
                 <>
-                  <Card.Img
-                    variant="top"
-                    src={`${process.env.REACT_APP_API_URL}/uploads/${shoe.image}`}
-                    alt={shoe.name}
-                    style={{
-                      height: "200px",
-                      objectFit: "cover",
-                      width: "100%",
-                    }}
-                  />
+                    <Card.Img
+                        variant="top"
+                        src={shoe.image}
+                        alt={shoe.name}
+                        style={{
+                            height: "200px",
+                            objectFit: "cover",
+                            width: "100%",
+                        }}
+                    />
                   <Card.Body
                     style={{
                       display: "flex",

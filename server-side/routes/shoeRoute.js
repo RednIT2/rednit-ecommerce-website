@@ -120,8 +120,8 @@ router.delete('/:id', async (req, res) => {
         const shoe = await Shoe.findByIdAndDelete(shoeId);
 
         //Xóa hình ảnh trên Cloudinary
-        if (!shoe.image) {
-            const publicId = shoe.image.split('/').pop().split('.')[0]; // Lấy public ID từ URL
+        if (shoe.image) {
+            const publicId = shoe.image.split('/').pop().split('.')[0]; // Lấy public_id từ URL
             await cloudinary.uploader.destroy(publicId); // Xóa hình ảnh trên Cloudinary
         }
         const deletedShoe = await Shoe.findByIdAndDelete(shoeId);

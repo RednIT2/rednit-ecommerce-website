@@ -13,8 +13,8 @@ const port = process.env.PORT || 8000;
 
 // Kết nối MongoDB Atlas
 mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
 });
 
 // Middleware
@@ -25,12 +25,7 @@ app.use(express.json());
 app.use('/shoes', shoeRoute);
 app.use('/users', userRoute); 
 
-// Serve file ảnh từ thư mục uploads
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-
-
 // Khởi chạy server
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+    console.log(`Server is running at http://localhost:${port}`);
 });
