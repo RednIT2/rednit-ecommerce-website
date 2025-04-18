@@ -17,7 +17,15 @@ mongoose.connect(process.env.MONGODB_URI, {
 });
 
 // Middleware
-app.use(cors());
+const allowedOrigins = [
+    "http://localhost:3000", // dev local
+    "https://rednit-ecommerce-website-ngo-thanh-dats-projects.vercel.app", // production
+];
+const corsOptions = {
+    origin: allowedOrigins,
+    credentials: true,
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Routes
