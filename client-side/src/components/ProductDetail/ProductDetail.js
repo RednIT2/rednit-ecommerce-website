@@ -29,7 +29,7 @@ export function ProductDetail() {
             <Card className="shadow-lg p-4">
                 <Card.Img
                     variant="top"
-                    src={`${process.env.REACT_APP_API_URL}/uploads/${product.image}`}
+                    src={product.image}
                     alt={product.name}
                     style={{
                         width: "300px",

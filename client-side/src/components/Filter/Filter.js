@@ -52,7 +52,7 @@ export function Filter() {
             <Card>
               <Card.Img
                 variant="top"
-                src={`${process.env.REACT_APP_API_URL}/uploads/${shoe.image}`}
+                src={shoe.image}
                 alt={shoe.name}
               />
               <Card.Body>

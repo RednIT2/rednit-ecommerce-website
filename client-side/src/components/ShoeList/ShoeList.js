@@ -8,7 +8,7 @@ export function ShoeList({ shoes }) {
       <div className="shoe-cards">
         {shoes.map((shoe) => (
           <div className="shoe-card" key={shoe._id}>
-            <img src={`${process.env.REACT_APP_API_URL}/uploads/${shoe.image}`} alt={shoe.name} className="shoe-image" />
+            <img src={shoe.image} alt={shoe.name} className="shoe-image" />
             <div className="shoe-details">
               <h3>{shoe.name}</h3>
               <p>Type: {shoe.type}</p>

@@ -68,7 +68,7 @@ export function Search() {
               <Card className="shoe-card h-100">
                 <Card.Img
                   variant="top"
-                  src={`${process.env.REACT_APP_API_URL}/uploads/${shoe.image}`}
+                  src={shoe.image}
                   alt={shoe.name}
                   className="shoe-image"
                 />
