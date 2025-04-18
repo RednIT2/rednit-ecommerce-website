@@ -9,7 +9,7 @@ const shoeRoutes = require('./routes/shoeRoute');
 const userRoutes = require('./routes/userRoute');
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT;
 
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
