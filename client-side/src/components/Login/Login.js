@@ -6,7 +6,7 @@ export function Login({ setUser, closeModal }) {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/users/login`, {
+      const response = await fetch(`'${process.env.REACT_APP_API_URL}/users/login'`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
