@@ -13,7 +13,7 @@ export function Products() {
   // Fetch shoes from the server
   useEffect(() => {
     axios
-      .get("http://localhost:3001/shoes")
+      .get(`${process.env.REACT_APP_API_URL}/shoes`)
       .then((response) => {
         setShoeList(response.data);
       })
@@ -29,7 +29,7 @@ export function Products() {
   const handleDeleteClick = (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       axios
-        .delete(`http://localhost:3001/shoes/${id}`)
+        .delete(`${process.env.REACT_APP_API_URL}/shoes/${id}`)
         .then(() => {
           setShoeList(shoeList.filter((shoe) => shoe._id !== id));
         })
@@ -42,7 +42,7 @@ export function Products() {
   const handleSave = (id, formData) => {
     setIsUpdating(true);
     axios
-      .put(`http://localhost:3001/shoes/${id}`, formData, {
+      .put(`${process.env.REACT_APP_API_URL}/shoes/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data", // Đảm bảo gửi đúng định dạng
         },
@@ -85,7 +85,7 @@ export function Products() {
                 <>
                   <Card.Img
                     variant="top"
-                    src={`http://localhost:3001/uploads/${shoe.image}`}
+                    src={`${process.env.REACT_APP_API_URL}/uploads/${shoe.image}`}
                     alt={shoe.name}
                     style={{
                       height: "200px",
