@@ -15,7 +15,7 @@ export function Search() {
   // Fetch shoes from the server
   useEffect(() => {
     axios
-      .get("http://localhost:3001/shoes")
+      .get(`${process.env.REACT_APP_API_URL}/shoes`)
       .then((response) => {
         setShoeList(response.data);
       })
@@ -68,7 +68,7 @@ export function Search() {
               <Card className="shoe-card h-100">
                 <Card.Img
                   variant="top"
-                  src={`http://localhost:3001/uploads/${shoe.image}`}
+                  src={`${process.env.REACT_APP_API_URL}/uploads/${shoe.image}`}
                   alt={shoe.name}
                   className="shoe-image"
                 />

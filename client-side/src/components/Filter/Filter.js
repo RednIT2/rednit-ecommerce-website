@@ -10,7 +10,7 @@ export function Filter() {
   // Fetch shoes from the server
   useEffect(() => {
     axios
-      .get("http://localhost:3001/shoes")
+      .get(`${process.env.REACT_APP_API_URL}/shoes`)
       .then((response) => {
         setShoes(response.data);
       })
@@ -52,7 +52,7 @@ export function Filter() {
             <Card>
               <Card.Img
                 variant="top"
-                src={`http://localhost:3001/uploads/${shoe.image}`}
+                src={`${process.env.REACT_APP_API_URL}/uploads/${shoe.image}`}
                 alt={shoe.name}
               />
               <Card.Body>

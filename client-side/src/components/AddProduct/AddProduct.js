@@ -25,7 +25,7 @@ export function AddProduct() {
         case "Adidas":
             return "AD";
         default:
-            return "XX"; // Mặc định nếu không chọn
+            return "XX";
         }
     };
 
@@ -44,9 +44,9 @@ export function AddProduct() {
             formData.append("image", addImage);
         }
         try {
-            const response = await fetch("http://localhost:3001/shoes", {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/shoes`, {
                 method: "POST",
-                body: formData, // Không cần `Content-Type`, trình duyệt tự thêm
+                body: formData,
             });
 
             if (response.ok) {
@@ -161,4 +161,4 @@ export function AddProduct() {
         )}
         </Container>
     );
-    }
+}

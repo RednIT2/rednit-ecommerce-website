@@ -11,7 +11,7 @@ export function ProductDetail() {
     useEffect(() => {
         // Fetch chi tiết sản phẩm từ server
         axios
-            .get(`http://localhost:3001/shoes/${id}`)
+            .get(`${process.env.REACT_APP_API_URL}/shoes/${id}`)
             .then((response) => {
                 setProduct(response.data);
             })
@@ -29,7 +29,7 @@ export function ProductDetail() {
             <Card className="shadow-lg p-4">
                 <Card.Img
                     variant="top"
-                    src={`http://localhost:3001/uploads/${product.image}`}
+                    src={`${process.env.REACT_APP_API_URL}/uploads/${product.image}`}
                     alt={product.name}
                     style={{
                         width: "300px",
