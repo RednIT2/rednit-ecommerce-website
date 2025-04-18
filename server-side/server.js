@@ -48,10 +48,6 @@ app.use('/users', userRoutes);
 // Serve file ảnh từ thư mục uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.get("/", (req, res) => {
-    res.send("Backend is running!");
-});
-
 // Khởi chạy server
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
