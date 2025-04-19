@@ -7,7 +7,21 @@ export function Update({ shoe, onSave }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUpdatedShoe({ ...updatedShoe, [name]: value });
+
+    // Nếu thay đổi type, cập nhật lại id
+    if (name === "type") {
+      const brandCode =
+        value === "Puma" ? "PM" :
+        value === "Nike" ? "NK" :
+        value === "Adidas" ? "AD" : "XX";
+
+      const sequence = updatedShoe.id.slice(-4); // Lấy 4 ký tự cuối từ id hiện tại
+      const newId = `SHOE${brandCode}${sequence}`; // Tạo id mới
+
+      setUpdatedShoe({ ...updatedShoe, [name]: value, id: newId });
+    } else {
+      setUpdatedShoe({ ...updatedShoe, [name]: value });
+    }
   };
 
   const handleImageChange = (e) => {
@@ -23,14 +37,12 @@ export function Update({ shoe, onSave }) {
     formData.append("color", updatedShoe.color);
     formData.append("price", updatedShoe.price);
     formData.append("stock", updatedShoe.stock);
-  
+    formData.append("id", updatedShoe.id); // Gửi id mới
+
     if (newImage) {
       formData.append("image", newImage); // Thêm hình ảnh mới nếu có
-    } 
-    // else {
-    // //   formData.append("image", updatedShoe.image); // Giữ hình ảnh cũ nếu không có hình ảnh mới
-    // // }
-  
+    }
+
     onSave(updatedShoe._id, formData); // Gửi formData thay vì object thông thường
   };
 
@@ -49,12 +61,16 @@ export function Update({ shoe, onSave }) {
       <Form.Group className="mb-3">
         <Form.Label>Type</Form.Label>
         <Form.Control
-          type="text"
+          as="select"
           name="type"
           value={updatedShoe.type}
           onChange={handleChange}
-          placeholder="Enter product type"
-        />
+        >
+          <option value="Puma">Puma</option>
+          <option value="Nike">Nike</option>
+          <option value="Adidas">Adidas</option>
+          <option value="Others">Others</option>
+        </Form.Control>
       </Form.Group>
       <Form.Group className="mb-3">
         <Form.Label>Sizes (comma-separated)</Form.Label>
