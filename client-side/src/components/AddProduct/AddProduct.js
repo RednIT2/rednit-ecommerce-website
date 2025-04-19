@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import HomeIcon from "@mui/icons-material/Home";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -13,6 +13,31 @@ export function AddProduct() {
     const [addImage, setAddImage] = useState("");
     const [generatedId, setGeneratedId] = useState("");
     const [showAlert, setShowAlert] = useState(false);
+
+    useEffect(() => {
+        const fetchGeneratedId = async () => {
+            if (!addType) return;
+    
+            try {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/shoes/generate-id`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ type: addType }),
+                });
+    
+                if (response.ok) {
+                    const data = await response.json();
+                    setGeneratedId(data.generatedId); // Lưu ID vào state
+                }
+            } catch (error) {
+                console.error("Error generating ID:", error);
+            }
+        };
+    
+        fetchGeneratedId();
+    }, [addType]);
 
     const navigate = useNavigate();
 
@@ -78,28 +103,7 @@ export function AddProduct() {
             setAddImage(file);
         }
     };
-
-    const handleTypeChange = async (e) => {
-        const selectedType = e.target.value;
-        setAddType(selectedType);
     
-        try {
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/shoes/generate-id`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ type: selectedType }),
-            });
-    
-            if (response.ok) {
-                const data = await response.json();
-                setGeneratedId(data.generatedId);
-            } else {
-                console.error("Failed to generate ID");
-            }
-        } catch (error) {
-            console.error("Error generating ID:", error);
-        }
-    };
 
     return (
         <Container>
@@ -147,14 +151,16 @@ export function AddProduct() {
             />
             </Form.Group>
             <Form.Group className="mb-3">
-                <Form.Label>Type</Form.Label>
-                <Form.Select value={addType} onChange={handleTypeChange}>
-                    <option value="">-- Select Type --</option>
-                    <option value="Puma">Puma</option>
-                    <option value="Nike">Nike</option>
-                    <option value="Adidas">Adidas</option>
-                    <option value="Others">Others</option>
-                </Form.Select>
+            <Form.Label>Type</Form.Label>
+            <Form.Select
+                value={addType}
+                onChange={(e) => setAddType(e.target.value)}
+            >
+                <option value="">Others</option>
+                <option value="Puma">Puma</option>
+                <option value="Nike">Nike</option>
+                <option value="Adidas">Adidas</option>
+            </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3">
             <Form.Label>Image</Form.Label>
@@ -171,18 +177,6 @@ export function AddProduct() {
             Save
             </Button>
         </Form>
-
-        {/* Hiển thị ID tự động */}
-        {showAlert && (
-            <Alert
-            variant="info"
-            className="mt-4"
-            onClose={() => setShowAlert(false)}
-            dismissible
-            >
-            <strong>Generated ID:</strong> {generatedId}
-            </Alert>
-        )}
         </Container>
     );
 }

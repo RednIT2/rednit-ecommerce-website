@@ -53,7 +53,7 @@ router.post('/generate-id', async (req, res) => {
                           type === "Nike" ? "NK" :
                           type === "Adidas" ? "AD" : "XX";
 
-        const count = await Shoe.countDocuments({ type });
+        const count = await Shoe.countDocuments();
         const sequence = String(count + 1).padStart(4, '0');
         const generatedId = `SHOE${brandCode}${sequence}`;
 
