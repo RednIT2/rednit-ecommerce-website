@@ -3,14 +3,19 @@ import { Form, Button } from "react-bootstrap";
 
 export function ShoeForm({ values, errors, onChange, onBlur, onImageChange, onSubmit, generatedId }) {
     return (
-        <Form>
-            <Form.Group className="mb-3">
-                <Form.Label>Generated ID</Form.Label>
-                <Form.Control type="text" value={generatedId} readOnly />
+        <Form className="p-4 bg-white rounded-lg shadow-md">
+            <Form.Group className="mb-4">
+                <Form.Label className="font-semibold">Generated ID</Form.Label>
+                <Form.Control 
+                    type="text" 
+                    value={generatedId} 
+                    readOnly 
+                    className="border border-gray-300 rounded-md"
+                />
             </Form.Group>
 
-            <Form.Group className="mb-3">
-                <Form.Label>Name</Form.Label>
+            <Form.Group className="mb-4">
+                <Form.Label className="font-semibold">Name</Form.Label>
                 <Form.Control 
                     type="text" 
                     value={values.name} 
@@ -18,13 +23,18 @@ export function ShoeForm({ values, errors, onChange, onBlur, onImageChange, onSu
                     onBlur={onBlur("name")}
                     placeholder="Enter shoe name..." 
                     isInvalid={!!errors.name}
+                    className="border border-gray-300 rounded-md"
                 />
-                <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid" className="text-red-500">{errors.name}</Form.Control.Feedback>
             </Form.Group>
 
-            <Form.Group className="mb-3">
-                <Form.Label>Type</Form.Label>
-                <Form.Select value={values.type} onChange={onChange("type")}>
+            <Form.Group className="mb-4">
+                <Form.Label className="font-semibold">Type</Form.Label>
+                <Form.Select 
+                    value={values.type} 
+                    onChange={onChange("type")}
+                    className="border border-gray-300 rounded-md"
+                >
                     <option value="">-- Select type --</option>
                     <option value="Others">Others</option>
                     <option value="Puma">Puma</option>
@@ -33,8 +43,8 @@ export function ShoeForm({ values, errors, onChange, onBlur, onImageChange, onSu
                 </Form.Select>
             </Form.Group>
             
-            <Form.Group className="mb-3">
-                <Form.Label>Price</Form.Label>
+            <Form.Group className="mb-4">
+                <Form.Label className="font-semibold">Price</Form.Label>
                 <Form.Control 
                     type="number" 
                     value={values.price} 
@@ -42,12 +52,13 @@ export function ShoeForm({ values, errors, onChange, onBlur, onImageChange, onSu
                     onBlur={onBlur("price")}
                     placeholder="Enter price..." 
                     isInvalid={!!errors.price}
+                    className="border border-gray-300 rounded-md"
                 />
-                <Form.Control.Feedback type="invalid">{errors.price}</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid" className="text-red-500">{errors.price}</Form.Control.Feedback>
             </Form.Group>
 
-            <Form.Group className="mb-3">
-                <Form.Label>Color</Form.Label>
+            <Form.Group className="mb-4">
+                <Form.Label className="font-semibold">Color</Form.Label>
                 <Form.Control
                     type="text"
                     value={values.color}
@@ -55,12 +66,13 @@ export function ShoeForm({ values, errors, onChange, onBlur, onImageChange, onSu
                     onBlur={onBlur("color")}
                     placeholder="Enter color..."
                     isInvalid={!!errors.color}
+                    className="border border-gray-300 rounded-md"
                 />
-                <Form.Control.Feedback type="invalid">{errors.color}</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid" className="text-red-500">{errors.color}</Form.Control.Feedback>
             </Form.Group>
 
-            <Form.Group className="mb-3">
-                <Form.Label>Sizes (comma separated)</Form.Label>
+            <Form.Group className="mb-4">
+                <Form.Label className="font-semibold">Sizes (comma separated)</Form.Label>
                 <Form.Control
                     type="text"
                     value={values.sizes}
@@ -68,12 +80,13 @@ export function ShoeForm({ values, errors, onChange, onBlur, onImageChange, onSu
                     onBlur={onBlur("sizes")}
                     placeholder="Enter sizes..."
                     isInvalid={!!errors.sizes}
+                    className="border border-gray-300 rounded-md"
                 />
-                <Form.Control.Feedback type="invalid">{errors.sizes}</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid" className="text-red-500">{errors.sizes}</Form.Control.Feedback>
             </Form.Group>
 
-            <Form.Group className="mb-3">
-                <Form.Label>Stock</Form.Label>
+            <Form.Group className="mb-4">
+                <Form.Label className="font-semibold">Stock</Form.Label>
                 <Form.Control
                     type="text"
                     value={values.stock}
@@ -81,19 +94,21 @@ export function ShoeForm({ values, errors, onChange, onBlur, onImageChange, onSu
                     onBlur={onBlur("stock")}
                     placeholder="Enter stock..."
                     isInvalid={!!errors.stock}
+                    className="border border-gray-300 rounded-md"
                 />
-                <Form.Control.Feedback type="invalid">{errors.stock}</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid" className="text-red-500">{errors.stock}</Form.Control.Feedback>
             </Form.Group>
 
-            <Form.Group className="mb-3">
-                <Form.Label>Image</Form.Label>
+            <Form.Group className="mb-4">
+                <Form.Label className="font-semibold">Image</Form.Label>
                 <Form.Control 
                     type="file" 
                     onChange={onImageChange}
                     onBlur={onBlur("image")}
                     isInvalid={!!errors.image}
+                    className="border border-gray-300 rounded-md"
                 />
-                <Form.Control.Feedback type="invalid">{errors.image}</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid" className="text-red-500">{errors.image}</Form.Control.Feedback>
             </Form.Group>
 
             {values.image && (
@@ -105,7 +120,13 @@ export function ShoeForm({ values, errors, onChange, onBlur, onImageChange, onSu
                 />
             )}
 
-            <Button variant="success" onClick={onSubmit}>Save</Button>
+            <Button 
+                variant="success" 
+                onClick={onSubmit} 
+                className="w-full py-2 text-white bg-green-500 hover:bg-green-600 rounded-md"
+            >
+                Add Product
+            </Button>
         </Form>
     );
 }

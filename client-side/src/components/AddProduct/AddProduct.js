@@ -113,6 +113,22 @@ export function AddProduct() {
     };
 
     const handleSaveClick = async () => {
+        const newErrors = {
+            name: validateField("name", addName),
+            type: validateField("type", addType),
+            price: validateField("price", addPrice),
+            color: validateField("color", addColor),
+            sizes: validateField("sizes", addSize),
+            stock: validateField("stock", addStock),
+            image: validateField("image", addImage),
+        };
+        
+        setErrors(newErrors);
+
+        if (Object.values(newErrors).some((error) => error)) {
+            return;
+        }
+
         const brandCode = getBrandCode(addType);
 
         const formData = new FormData();
