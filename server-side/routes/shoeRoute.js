@@ -45,6 +45,25 @@ router.post('/', upload.single('image'), async (req, res) => {
     }
 })
 
+router.post('/generate-id', async (req, res) => {
+    try {
+        const { type } = req.body;
+
+        const brandCode = type === "Puma" ? "PM" :
+                          type === "Nike" ? "NK" :
+                          type === "Adidas" ? "AD" : "XX";
+
+        const count = await Shoe.countDocuments({ type });
+        const sequence = String(count + 1).padStart(4, '0');
+        const generatedId = `SHOE${brandCode}${sequence}`;
+
+        res.json({ generatedId });
+    } catch (error) {
+        console.error("Error generating ID:", error);
+        res.status(500).json({ message: "Failed to generate ID." });
+    }
+});
+
 // API lấy danh sách giày
 router.get('/', async (req, res) => {
   try {

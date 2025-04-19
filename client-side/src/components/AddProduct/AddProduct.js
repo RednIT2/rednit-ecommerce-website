@@ -79,12 +79,38 @@ export function AddProduct() {
         }
     };
 
+    const handleTypeChange = async (e) => {
+        const selectedType = e.target.value;
+        setAddType(selectedType);
+    
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/shoes/generate-id`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ type: selectedType }),
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                setGeneratedId(data.generatedId);
+            } else {
+                console.error("Failed to generate ID");
+            }
+        } catch (error) {
+            console.error("Error generating ID:", error);
+        }
+    };
+
     return (
         <Container>
             <NavLink to="/" className="btn btn-primary mb-3">
                 <HomeIcon />
             </NavLink>
             <Form>
+                <Form.Group className="mb-3">
+                    <Form.Label>Generated ID</Form.Label>
+                    <Form.Control type="text" value={generatedId} readOnly />
+                </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>Name</Form.Label>
                     <Form.Control type="text" value={addName} onChange={(e) => setAddName(e.target.value)} placeholder="Name"/>
@@ -126,7 +152,7 @@ export function AddProduct() {
                 value={addType}
                 onChange={(e) => setAddType(e.target.value)}
             >
-                <option value="">Select Type</option>
+                <option value="">Others</option>
                 <option value="Puma">Puma</option>
                 <option value="Nike">Nike</option>
                 <option value="Adidas">Adidas</option>
