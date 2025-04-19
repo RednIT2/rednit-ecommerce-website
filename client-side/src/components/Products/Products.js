@@ -38,33 +38,28 @@ export function Products() {
         });
     }
   };
-  //kahngkahng
 
-  const handleSave = async (id, formData) => {
+  const handleSave = (id, formData) => {
     setIsUpdating(true);
-
-    try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/shoes/${id}`, {
-            method: "PUT",
-            body: formData,
-        });
-
-        if (response.ok) {
-            const updatedShoe = await response.json();
-            const updatedShoes = shoeList.map((shoe) =>
-                shoe._id === id ? updatedShoe : shoe
-            );
-            setShoeList(updatedShoes);
-            setEditingId(null);
-        } else {
-            console.error("Failed to update shoe:", await response.json());
-        }
-    } catch (error) {
-        console.error("Error updating shoe:", error);
-    } finally {
+    axios
+      .put(`${process.env.REACT_APP_API_URL}/shoes/${id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Đảm bảo gửi đúng định dạng
+        },
+      })
+      .then((response) => {
+        const updatedShoes = shoeList.map((shoe) =>
+          shoe._id === id ? response.data : shoe
+        );
+        setShoeList(updatedShoes);
+        setEditingId(null);
         setIsUpdating(false);
-    }
-};
+      })
+      .catch((error) => {
+        console.error("Error updating shoe:", error);
+        setIsUpdating(false);
+      });
+  };
 
   return (
     <Container>

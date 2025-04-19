@@ -108,48 +108,31 @@ const handleSave = (id, formData) => {
     });
 };
 router.put('/:id', upload.single('image'), async (req, res) => {
-  try {
-      const { type, name, sizes, color, price, stock } = req.body;
+    try {
+        const updatedData = {
+            name: req.body.name,
+            type: req.body.type,
+            sizes: req.body.sizes.split(',').map(Number),
+            color: req.body.color,
+            price: parseFloat(req.body.price),
+            stock: parseInt(req.body.stock, 10),
+        };
 
-      // Tính toán lại brandCode dựa trên type
-      const brandCode = type === "Puma" ? "PM" :
-                        type === "Nike" ? "NK" :
-                        type === "Adidas" ? "AD" : "XX";
-
-      // Lấy _id của sản phẩm hiện tại từ req.params.id
-      const currentShoe = await Shoe.findById(req.params.id);
-      if (!currentShoe) {
-          return res.status(404).json({ message: 'Shoe not found.' });
-      }
-
-      // Tạo id mới dựa trên _id hiện tại
-      const sequence = currentShoe._id.toString().slice(-4); // Lấy 4 ký tự cuối của _id
-      const newId = `SHOE${brandCode}${sequence}`;
-
-      // Chuẩn bị dữ liệu cập nhật
-      const updatedData = {
-          id: newId, // Cập nhật id mới
-          name,
-          type,
-          sizes: sizes.split(',').map(Number),
-          color,
-          price: parseFloat(price),
-          stock: parseInt(stock, 10),
-      };
-
-      // Nếu có hình ảnh mới, cập nhật URL từ Cloudinary
-      if (req.file) {
-          updatedData.image = req.file.path;
-      }
-
-      // Cập nhật sản phẩm trong cơ sở dữ liệu
-      const updatedShoe = await Shoe.findByIdAndUpdate(req.params.id, updatedData, { new: true });
-
-      res.json(updatedShoe);
-  } catch (error) {
-      console.error('Error updating shoe:', error);
-      res.status(500).json({ message: 'Failed to update shoe.' });
-  }
+        //Nếu có hình ảnh mới, cập nhật URL từ Cloudinary
+        if (req.file) {
+            updatedData.image = req.file.path; //Lưu URL của ảnh trên Cloudinary
+        }
+        const updatedShoe = await Shoe.findByIdAndUpdate(req.params.id, updatedData, {
+            new: true,
+        });
+        if (!updatedShoe) {
+            return res.status(404).json({ message: 'Shoe not found.' });
+        }
+        res.json(updatedShoe);
+    } catch (error) {
+        console.error('Error updating shoe:', error);
+        res.status(500).json({ message: 'Failed to update shoe.' });
+    }
 });
 router.delete('/:id', async (req, res) => {
     try {
@@ -159,7 +142,7 @@ router.delete('/:id', async (req, res) => {
         //Xóa hình ảnh trên Cloudinary
         if (shoe.image) {
             const publicId = shoe.image.split('/').pop().split('.')[0]; // Lấy public_id từ URL
-            await cloudinary.uploader.destroy(publicId); // Xóa hình ảnh trên Cloudinaryyy
+            await cloudinary.uploader.destroy(publicId); // Xóa hình ảnh trên Cloudinary
         }
         const deletedShoe = await Shoe.findByIdAndDelete(shoeId);
         res.json({ message: 'Shoe deleted successfully!', shoe: deletedShoe });
