@@ -72,6 +72,7 @@ export function Update({ shoe, onSave }) {
           <option value="Nike">Nike</option>
           <option value="Adidas">Adidas</option>
           <option value="Others">Others</option>
+          
         </Form.Control>
       </Form.Group>
       <Form.Group className="mb-3">

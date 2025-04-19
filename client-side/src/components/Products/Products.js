@@ -10,7 +10,7 @@ export function Products() {
   const [editingId, setEditingId] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
 
-  // Fetch shoes from the server
+  // Fetch shoes from the server hi
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/shoes`)
