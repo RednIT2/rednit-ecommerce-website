@@ -263,7 +263,7 @@ export function AddProduct() {
                         <img
                             src={URL.createObjectURL(addImage)}
                             alt="Preview"
-                            className="w-full h-[200px] object-cover rounded-xl shadow"
+                            className="w-100 h-200 object-cover rounded-xl shadow"
                         />
                     </div>
                 )}
