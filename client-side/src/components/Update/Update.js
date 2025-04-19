@@ -1,36 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 
+
 export function Update({ shoe, onSave }) {
   const [updatedShoe, setUpdatedShoe] = useState({ ...shoe });
   const [newImage, setNewImage] = useState(null); // State để lưu hình ảnh mới
-  const [generatedId, setGeneratedId] = useState(shoe.id); // State để lưu id tự động
-
-  useEffect(() => {
-    const fetchGeneratedId = async () => {
-      if (!updatedShoe.type) return;
-
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/shoes/generate-id`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ type: updatedShoe.type }),
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setGeneratedId(data.generatedId);
-          setUpdatedShoe((prev) => ({ ...prev, id: data.generatedId })); // Cập nhật id mới
-        }
-      } catch (error) {
-        console.error("Error generating ID:", error);
-      }
-    };
-
-    fetchGeneratedId();
-  }, [updatedShoe.type]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,29 +16,39 @@ export function Update({ shoe, onSave }) {
     setNewImage(file); // Lưu file ảnh mới
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const formData = new FormData();
-    formData.append("id", updatedShoe.id); // Đảm bảo gửi id mới
-    formData.append("name", updatedShoe.name);
+    formData.append("id", updatedShoe.id); // Gửi id mới
     formData.append("type", updatedShoe.type);
+    formData.append("name", updatedShoe.name);
     formData.append("sizes", updatedShoe.sizes.join(","));
     formData.append("color", updatedShoe.color);
     formData.append("price", updatedShoe.price);
     formData.append("stock", updatedShoe.stock);
 
     if (newImage) {
-      formData.append("image", newImage); // Thêm hình ảnh mới nếu có
+        formData.append("image", newImage); // Thêm hình ảnh mới nếu có
     }
 
-    onSave(updatedShoe._id, formData); // Gửi formData thay vì object thông thường
-  };
+    try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/shoes/${updatedShoe._id}`, {
+            method: "PUT",
+            body: formData,
+        });
+
+        if (response.ok) {
+            const updatedShoeData = await response.json();
+            onSave(updatedShoeData); // Gọi callback để cập nhật danh sách sản phẩm
+        } else {
+            console.error("Failed to update shoe:", await response.json());
+        }
+    } catch (error) {
+        console.error("Error updating shoe:", error);
+    }
+};
 
   return (
     <Form>
-      <Form.Group className="mb-3">
-        <Form.Label>ID</Form.Label>
-        <Form.Control type="text" value={generatedId} readOnly />
-      </Form.Group>
       <Form.Group className="mb-3">
         <Form.Label>Name</Form.Label>
         <Form.Control
