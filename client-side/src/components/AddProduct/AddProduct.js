@@ -147,16 +147,14 @@ export function AddProduct() {
             />
             </Form.Group>
             <Form.Group className="mb-3">
-            <Form.Label>Type</Form.Label>
-            <Form.Select
-                value={addType}
-                onChange={(e) => setAddType(e.target.value)}
-            >
-                <option value="">Others</option>
-                <option value="Puma">Puma</option>
-                <option value="Nike">Nike</option>
-                <option value="Adidas">Adidas</option>
-            </Form.Select>
+                <Form.Label>Type</Form.Label>
+                <Form.Select value={addType} onChange={handleTypeChange}>
+                    <option value="">-- Select Type --</option>
+                    <option value="Puma">Puma</option>
+                    <option value="Nike">Nike</option>
+                    <option value="Adidas">Adidas</option>
+                    <option value="Others">Others</option>
+                </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3">
             <Form.Label>Image</Form.Label>
