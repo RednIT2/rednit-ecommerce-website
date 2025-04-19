@@ -1,9 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 
 export function Update({ shoe, onSave }) {
   const [updatedShoe, setUpdatedShoe] = useState({ ...shoe });
   const [newImage, setNewImage] = useState(null); // State để lưu hình ảnh mới
+  const [generatedId, setGeneratedId] = useState(shoe.id); // State để lưu id tự động
+
+  useEffect(() => {
+    const fetchGeneratedId = async () => {
+      if (!updatedShoe.type) return;
+
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/shoes/generate-id`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ type: updatedShoe.type }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setGeneratedId(data.generatedId);
+          setUpdatedShoe((prev) => ({ ...prev, id: data.generatedId })); // Cập nhật id mới
+        }
+      } catch (error) {
+        console.error("Error generating ID:", error);
+      }
+    };
+
+    fetchGeneratedId();
+  }, [updatedShoe.type]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,25 +44,27 @@ export function Update({ shoe, onSave }) {
 
   const handleSave = () => {
     const formData = new FormData();
+    formData.append("id", updatedShoe.id); // Đảm bảo gửi id mới
     formData.append("name", updatedShoe.name);
     formData.append("type", updatedShoe.type);
     formData.append("sizes", updatedShoe.sizes.join(","));
     formData.append("color", updatedShoe.color);
     formData.append("price", updatedShoe.price);
     formData.append("stock", updatedShoe.stock);
-  
+
     if (newImage) {
       formData.append("image", newImage); // Thêm hình ảnh mới nếu có
-    } 
-    // else {
-    // //   formData.append("image", updatedShoe.image); // Giữ hình ảnh cũ nếu không có hình ảnh mới
-    // // }
-  
+    }
+
     onSave(updatedShoe._id, formData); // Gửi formData thay vì object thông thường
   };
 
   return (
     <Form>
+      <Form.Group className="mb-3">
+        <Form.Label>ID</Form.Label>
+        <Form.Control type="text" value={generatedId} readOnly />
+      </Form.Group>
       <Form.Group className="mb-3">
         <Form.Label>Name</Form.Label>
         <Form.Control
@@ -49,12 +78,17 @@ export function Update({ shoe, onSave }) {
       <Form.Group className="mb-3">
         <Form.Label>Type</Form.Label>
         <Form.Control
-          type="text"
+          as="select"
           name="type"
           value={updatedShoe.type}
           onChange={handleChange}
-          placeholder="Enter product type"
-        />
+        >
+          <option value="">Select Type</option>
+          <option value="Puma">Puma</option>
+          <option value="Nike">Nike</option>
+          <option value="Adidas">Adidas</option>
+          <option value="Others">Others</option>
+        </Form.Control>
       </Form.Group>
       <Form.Group className="mb-3">
         <Form.Label>Sizes (comma-separated)</Form.Label>
