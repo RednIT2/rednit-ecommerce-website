@@ -26,9 +26,10 @@ export function Update({ shoe, onSave }) {
   
     if (newImage) {
       formData.append("image", newImage); // Thêm hình ảnh mới nếu có
-    } else {
-      formData.append("image", updatedShoe.image); // Giữ hình ảnh cũ nếu không có hình ảnh mới
-    }
+    } 
+    // else {
+    // //   formData.append("image", updatedShoe.image); // Giữ hình ảnh cũ nếu không có hình ảnh mới
+    // // }
   
     onSave(updatedShoe._id, formData); // Gửi formData thay vì object thông thường
   };
