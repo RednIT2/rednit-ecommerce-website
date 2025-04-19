@@ -38,7 +38,7 @@ export function Update({ shoe, onSave }) {
 
         if (response.ok) {
             const updatedShoeData = await response.json();
-            onSave(updatedShoeData); // Gọi callback để cập nhật danh sách sản phẩm
+            onSave(updatedShoeData); // Gọi callback để cập nhật danh sách sản phẩ
         } else {
             console.error("Failed to update shoe:", await response.json());
         }

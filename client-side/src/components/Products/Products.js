@@ -10,7 +10,7 @@ export function Products() {
   const [editingId, setEditingId] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
 
-  // Fetch shoes from the server hi
+  // Fetch shoes from the server
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/shoes`)
@@ -44,7 +44,7 @@ export function Products() {
     axios
       .put(`${process.env.REACT_APP_API_URL}/shoes/${id}`, formData, {
         headers: {
-          "Content-Type": "multipart/form-data", // Đảm bảo gửi đúng định dạngd sdffvs
+          "Content-Type": "multipart/form-data", // Đảm bảo gửi đúng định dạn
         },
       })
       .then((response) => {
