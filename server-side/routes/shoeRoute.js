@@ -122,9 +122,10 @@ router.put('/:id', upload.single('image'), async (req, res) => {
                         type === "Nike" ? "NK" :
                         type === "Adidas" ? "AD" : "XX";
 
-      // Giữ nguyên sequence từ id hiện tại
-      const sequence = currentShoe.id.slice(-4); // Lấy 4 ký tự cuối từ id hiện tại
-      const newId = `SHOE${brandCode}${sequence}`; // Tạo id mới
+      // Giữ nguyên tiền tố "SHOE" và chuỗi số cuối
+      const prefix = currentShoe.id.slice(0, 4); // Lấy "SHOE"
+      const sequence = currentShoe.id.slice(-4); // Lấy "0005"
+      const newId = `${prefix}${brandCode}${sequence}`; // Tạo id mới
 
       // Chuẩn bị dữ liệu cập nhật
       const updatedData = {
