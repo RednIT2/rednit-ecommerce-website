@@ -18,7 +18,7 @@ const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: 'shoes', // Thư mục trên Cloudinary
-        allowed_formats: ['jpg', 'png', 'jpeg'], // Các định dạng ảnh được phép
+        allowed_formats: ['jpg', 'png', 'jpeg', 'avif'], // Các định dạng ảnh được phép
     }
 })
 
