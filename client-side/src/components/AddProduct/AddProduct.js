@@ -156,7 +156,7 @@ export function AddProduct() {
                 value={addType}
                 onChange={(e) => setAddType(e.target.value)}
             >
-                <option value="">Others</option>
+                <option value="Others">Others</option>
                 <option value="Puma">Puma</option>
                 <option value="Nike">Nike</option>
                 <option value="Adidas">Adidas</option>

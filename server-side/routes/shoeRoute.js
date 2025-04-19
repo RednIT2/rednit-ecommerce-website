@@ -51,10 +51,11 @@ router.post('/generate-id', async (req, res) => {
 
         const brandCode = type === "Puma" ? "PM" :
                           type === "Nike" ? "NK" :
-                          type === "Adidas" ? "AD" : "XX";
+                          type === "Adidas" ? "AD" : "XX";  // Xử lý 'Others' là 'XX'
 
-        const count = await Shoe.countDocuments();
-        const sequence = String(count + 1).padStart(4, '0');
+        const count = await Shoe.countDocuments(); // Đếm tổng số sản phẩm
+        const sequence = String(count + 1).padStart(4, '0');  // Tạo số thứ tự tăng dần
+
         const generatedId = `SHOE${brandCode}${sequence}`;
 
         res.json({ generatedId });
