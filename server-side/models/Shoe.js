@@ -15,7 +15,7 @@ const shoeSchema = new mongoose.Schema({
 // Middleware để tự động tạo id trước khi lưu
 shoeSchema.pre('save', async function (next) {
     if (!this.id) {
-        const brandCode = this.type === "Puma" ? "PM" : this.type === "Nike" ? "NK" : this.type === "Adidas" ? "AD" : "XX"; // Lấy brandCode từ type
+        const brandCode = this.type === "Puma" ? "PM" : this.type === "Nike" ? "NK" : this.type === "Adidas" ? "AD" : "XX";
         const count = await mongoose.model('Shoe').countDocuments();
         const sequence = String(count + 1).padStart(4, '0');
         this.id = `SHOE${brandCode}${sequence}`;

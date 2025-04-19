@@ -4,7 +4,6 @@ import HomeIcon from "@mui/icons-material/Home";
 import { NavLink } from "react-router-dom";
 import { Container, Card, Alert, Row, Col } from "react-bootstrap";
 import InfiniteScroll from "react-infinite-scroll-component";
-import "./Search.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export function Search() {

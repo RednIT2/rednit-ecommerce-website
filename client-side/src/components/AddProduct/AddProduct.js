@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Container, Form, Button } from "react-bootstrap";
-import HomeIcon from "@mui/icons-material/Home";
+import { Container } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
-
+import HomeIcon from "@mui/icons-material/Home";
+import {ShoeForm} from "../ui/ShoeForm";
 export function AddProduct() {
     const [addName, setAddName] = useState("");
     const [addSize, setAddSize] = useState("");
@@ -14,10 +14,12 @@ export function AddProduct() {
     const [generatedId, setGeneratedId] = useState("");
     const [errors, setErrors] = useState({});
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         const fetchGeneratedId = async () => {
             if (!addType) return;
-    
+
             try {
                 const response = await fetch(`${process.env.REACT_APP_API_URL}/shoes/generate-id`, {
                     method: "POST",
@@ -26,37 +28,35 @@ export function AddProduct() {
                     },
                     body: JSON.stringify({ type: addType }),
                 });
-    
+
                 if (response.ok) {
                     const data = await response.json();
-                    setGeneratedId(data.generatedId); // Lưu ID vào state
+                    setGeneratedId(data.generatedId);
                 }
             } catch (error) {
                 console.error("Error generating ID:", error);
             }
         };
-    
+
         fetchGeneratedId();
     }, [addType]);
 
-    const navigate = useNavigate();
-
     const getBrandCode = (type) => {
         switch (type) {
-        case "Puma":
-            return "PM";
-        case "Nike":
-            return "NK";
-        case "Adidas":
-            return "AD";
-        default:
-            return "XX";
+            case "Puma": 
+                return "PM";
+            case "Nike": 
+                return "NK";
+            case "Adidas": 
+                return "AD";
+            default: 
+                return "XX";
         }
     };
 
     const validateField = (field, value) => {
         let error = "";
-    
+
         switch (field) {
             case "name":
                 if (!value.trim() || value.length <= 4) {
@@ -101,8 +101,15 @@ export function AddProduct() {
             default:
                 break;
         }
-    
+
         return error;
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setAddImage(file);
+        }
     };
 
     const handleSaveClick = async () => {
@@ -119,6 +126,7 @@ export function AddProduct() {
         if (addImage) {
             formData.append("image", addImage);
         }
+
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/shoes`, {
                 method: "POST",
@@ -129,6 +137,7 @@ export function AddProduct() {
                 const data = await response.json();
                 setGeneratedId(data.shoe.id);
 
+                // Reset form
                 setAddName("");
                 setAddPrice("");
                 setAddSize("");
@@ -147,133 +156,46 @@ export function AddProduct() {
         }
     };
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setAddImage(file);
-        }
-    };
-    
     return (
-        <Container className="py-5">
-            <div className="mb-4">
-                <NavLink to="/" className="btn btn-outline-primary flex items-center gap-2">
-                    <HomeIcon />
-                </NavLink>
-            </div>
+        <Container>
+            <NavLink to="/" className="btn btn-primary mb-3">
+                <HomeIcon />
+            </NavLink>
 
-            <div className="bg-white p-6 rounded-2xl shadow-lg">
-                <h2 className="text-2xl font-semibold mb-6 text-center text-gray-700">Add New Shoe</h2>
-                <Form className="grid md:grid-cols-2 gap-4">
-                    <Form.Group className="mb-3">
-                        <Form.Label>Generated ID</Form.Label>
-                        <Form.Control type="text" value={generatedId} readOnly />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                        <Form.Label>Name</Form.Label>
-                        <Form.Control 
-                            type="text" 
-                            value={addName} 
-                            onChange={(e) => setAddName(e.target.value)}
-                            onBlur={(e) => setErrors({ ...errors, name: validateField("name", e.target.value) })}
-                            placeholder="Enter name shoe..." 
-                            isInvalid={!!errors.name}
-                        />
-                        <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                        <Form.Label>Type</Form.Label>
-                        <Form.Select value={addType} onChange={(e) => setAddType(e.target.value)}>
-                            <option value="">-- Select type --</option>
-                            <option value="Others">Others</option>
-                            <option value="Puma">Puma</option>
-                            <option value="Nike">Nike</option>
-                            <option value="Adidas">Adidas</option>
-                        </Form.Select>
-                    </Form.Group>
-                    
-                    <Form.Group className="mb-3">
-                        <Form.Label>Price</Form.Label>
-                        <Form.Control 
-                            type="number" 
-                            value={addPrice} 
-                            onChange={(e) => setAddPrice(e.target.value)}
-                            onBlur={(e) => setErrors({ ...errors, price: validateField("price", e.target.value) })}
-                            placeholder="Enter price..." 
-                            isInvalid={!!errors.price}
-                        />
-                        <Form.Control.Feedback type="invalid">{errors.price}</Form.Control.Feedback>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                        <Form.Label>Color</Form.Label>
-                        <Form.Control
-                            type="text"
-                            value={addColor}
-                            onChange={(e) => setAddColor(e.target.value)}
-                            onBlur={(e) => setErrors({ ...errors, color: validateField("color", e.target.value) })}
-                            placeholder="Enter color..."
-                            isInvalid={!!errors.color}
-                        />
-                        <Form.Control.Feedback type="invalid">{errors.color}</Form.Control.Feedback>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                        <Form.Label>Sizes (comma separated)</Form.Label>
-                        <Form.Control
-                            type="number"
-                            value={addSize}
-                            onChange={(e) => setAddSize(e.target.value)}
-                            onBlur={(e) => setErrors({ ...errors, sizes: validateField("sizes", e.target.value) })}
-                            placeholder="Enter sizes..."
-                            isInvalid={!!errors.sizes}
-                        />
-                        <Form.Control.Feedback type="invalid">{errors.sizes}</Form.Control.Feedback>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                        <Form.Label>Stock</Form.Label>
-                        <Form.Control
-                            type="text"
-                            value={addStock}
-                            onChange={(e) => setAddStock(e.target.value)}
-                            onAbort={(e) => setErrors({ ...errors, stock: validateField("stock", e.target.value) })}
-                            placeholder="Enter stock..."
-                            isInvalid={!!errors.stock}
-                        />
-                        <Form.Control.Feedback type="invalid">{errors.stock}</Form.Control.Feedback>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                        <Form.Label>Image</Form.Label>
-                        <Form.Control 
-                            type="file" 
-                            onChange={handleImageChange}
-                            onBlur={(e) => setErrors({ ...errors, image: validateField("image", addImage) })}
-                            isInvalid={!!errors.image}
-                        />
-                        <Form.Control.Feedback type="invalid">{errors.image}</Form.Control.Feedback>
-                    </Form.Group>
-                </Form>
-
-                {addImage && (
-                    <div className="mt-4">
-                        <img
-                            src={URL.createObjectURL(addImage)}
-                            alt="Preview"
-                            className="w-100 h-200 object-cover rounded-xl shadow"
-                        />
-                    </div>
-                )}
-
-                <div className="mt-6 text-center">
-                    <Button variant="success" onClick={handleSaveClick} className="px-4 py-2 text-lg rounded-xl shadow-md">
-                        Save Product
-                    </Button>
-                </div>
-            </div>
+            <ShoeForm
+                values={{
+                    name: addName,
+                    type: addType,
+                    price: addPrice,
+                    color: addColor,
+                    sizes: addSize,
+                    stock: addStock,
+                    image: addImage,
+                }}
+                errors={errors}
+                onChange={(field) => (e) => {
+                    const value = e.target.value;
+                    switch (field) {
+                        case "name": setAddName(value); break;
+                        case "type": setAddType(value); break;
+                        case "price": setAddPrice(value); break;
+                        case "color": setAddColor(value); break;
+                        case "sizes": setAddSize(value); break;
+                        case "stock": setAddStock(value); break;
+                        default: break;
+                    }
+                }}
+                onBlur={(field) => (e) => {
+                    const value = field === "image" ? addImage : e.target.value;
+                    setErrors((prev) => ({
+                        ...prev,
+                        [field]: validateField(field, value)
+                    }));
+                }}
+                onImageChange={handleImageChange}
+                onSubmit={handleSaveClick}
+                generatedId={generatedId}
+            />
         </Container>
     );
 }
