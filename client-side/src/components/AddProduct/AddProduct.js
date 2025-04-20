@@ -148,7 +148,7 @@ export function AddProduct() {
                 setAddColor("");
                 setAddStock("");
                 setAddImage("");
-                navigate("/products");
+                // navigate("/products");
             } else {
                 alert("Failed to add shoe");
             }
