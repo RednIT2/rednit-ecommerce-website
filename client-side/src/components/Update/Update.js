@@ -2,27 +2,27 @@ import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 
 export function Update({ shoe, onSave }) {
-  const [updatedShoe, setUpdatedShoe] = useState({ ...shoe });
-  const [newImage, setNewImage] = useState(null); // State để lưu hình ảnh mới
+    const [updatedShoe, setUpdatedShoe] = useState({ ...shoe });
+    const [newImage, setNewImage] = useState(null); // State để lưu hình ảnh mới
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+    const handleChange = (e) => {
+        const { name, value } = e.target;
 
-    // Nếu thay đổi type, cập nhật lại id
-    if (name === "type") {
-      const brandCode =
-        value === "Puma" ? "PM" :
-        value === "Nike" ? "NK" :
-        value === "Adidas" ? "AD" : "XX";
+        // Nếu thay đổi type, cập nhật lại id
+        if (name === "type") {
+            const brandCode =
+                value === "Puma" ? "PM" :
+                value === "Nike" ? "NK" :
+                value === "Adidas" ? "AD" : "XX";
 
-      const sequence = updatedShoe.id.slice(-4); // Lấy 4 ký tự cuối từ id hiện tại
-      const newId = `SHOE${brandCode}${sequence}`; // Tạo id mới
+        const sequence = updatedShoe.id.slice(-4); // Lấy 4 ký tự cuối từ id hiện tại
+        const newId = `SHOE${brandCode}${sequence}`; // Tạo id mới
 
-      setUpdatedShoe({ ...updatedShoe, [name]: value, id: newId });
-    } else {
-      setUpdatedShoe({ ...updatedShoe, [name]: value });
-    }
-  };
+            setUpdatedShoe({ ...updatedShoe, [name]: value, id: newId });
+        } else {
+            setUpdatedShoe({ ...updatedShoe, [name]: value });
+        }
+    };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];

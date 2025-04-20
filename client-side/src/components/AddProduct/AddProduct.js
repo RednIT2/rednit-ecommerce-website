@@ -13,9 +13,8 @@ export function AddProduct() {
     const [addImage, setAddImage] = useState("");
     const [generatedId, setGeneratedId] = useState("");
     const [errors, setErrors] = useState({});
-
+    const [showAlert, setShowAlert] = useState(false);
     const navigate = useNavigate();
-
     useEffect(() => {
         const fetchGeneratedId = async () => {
             if (!addType) return;
@@ -37,10 +36,8 @@ export function AddProduct() {
                 console.error("Error generating ID:", error);
             }
         };
-
         fetchGeneratedId();
     }, [addType]);
-
     const getBrandCode = (type) => {
         switch (type) {
             case "Puma": 
@@ -53,10 +50,8 @@ export function AddProduct() {
                 return "XX";
         }
     };
-
     const validateField = (field, value) => {
         let error = "";
-
         switch (field) {
             case "name":
                 if (!value.trim() || value.length <= 4) {
@@ -101,17 +96,14 @@ export function AddProduct() {
             default:
                 break;
         }
-
         return error;
     };
-
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
             setAddImage(file);
         }
     };
-
     const handleSaveClick = async () => {
         const newErrors = {
             name: validateField("name", addName),
@@ -122,15 +114,11 @@ export function AddProduct() {
             stock: validateField("stock", addStock),
             image: validateField("image", addImage),
         };
-        
         setErrors(newErrors);
-
         if (Object.values(newErrors).some((error) => error)) {
             return;
         }
-
         const brandCode = getBrandCode(addType);
-
         const formData = new FormData();
         formData.append("name", addName);
         formData.append("type", addType);
@@ -142,17 +130,16 @@ export function AddProduct() {
         if (addImage) {
             formData.append("image", addImage);
         }
-
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/shoes`, {
                 method: "POST",
                 body: formData,
             });
-
             if (response.ok) {
                 const data = await response.json();
                 setGeneratedId(data.shoe.id);
-
+                setShowAlert(true);
+                setTimeout(() => setShowAlert(false), 3000);
                 // Reset form
                 setAddName("");
                 setAddPrice("");
@@ -161,7 +148,6 @@ export function AddProduct() {
                 setAddColor("");
                 setAddStock("");
                 setAddImage("");
-
                 navigate("/products");
             } else {
                 alert("Failed to add shoe");
@@ -171,13 +157,16 @@ export function AddProduct() {
             alert("An error occurred while adding the shoe");
         }
     };
-
     return (
         <Container>
             <NavLink to="/" className="btn btn-primary mb-3">
                 <HomeIcon />
             </NavLink>
-
+            {showAlert && (
+                <div className="alert alert-success" role="alert">
+                    Product added successfully!
+                </div>
+            )}
             <ShoeForm
                 values={{
                     name: addName,
