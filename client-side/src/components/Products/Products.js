@@ -22,9 +22,7 @@ export function Products() {
       });
   }, []);
 
-  const handleEditClick = (shoe) => {
-    setEditingId(shoe._id);
-  };
+
 
   const handleDeleteClick = (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
@@ -116,7 +114,7 @@ export function Products() {
                       </NavLink>
                       <Button
                         variant="warning"
-                        onClick={() => handleEditClick(shoe)}
+                        onClick={() => setEditingId(shoe._id)}
                         className="me-2"
                       >
                         Edit

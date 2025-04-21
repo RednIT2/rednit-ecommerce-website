@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
-import { Navbar, Nav, Container, Modal, Button } from "react-bootstrap";
+import { Navbar, Nav, Container, Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import HomeIcon from "@mui/icons-material/Home";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import {Home} from "./components/Home/Home";
-import {Products} from "./components/Products/Products";
-import {ProductDetail} from "./components/ProductDetail/ProductDetail"; 
-import {AddProduct} from "./components/AddProduct/AddProduct";
-import {Search} from "./components/Search/Search";
-import {Login} from "./components/Login/Login";
-import {SignUp} from "./components/SignUp/SignUp";
+import { Home } from "./components/Home/Home";
+import { Products } from "./components/Products/Products";
+import { ProductDetail } from "./components/ProductDetail/ProductDetail";
+import { AddProduct } from "./components/AddProduct/AddProduct";
+import { Search } from "./components/Search/Search";
+import { Login } from "./components/Login/Login";
+import { SignUp } from "./components/SignUp/SignUp";
+import { Logout } from "./components/Logout/Logout";
 
 export function App() {
   const [user, setUser] = useState(null);
@@ -23,11 +23,6 @@ export function App() {
       setUser(JSON.parse(storedUser));
     }
   }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    setUser(null);
-  };
 
   return (
     <BrowserRouter>
@@ -47,7 +42,7 @@ export function App() {
                   <Nav.Link disabled>
                     <AccountCircleIcon /> {user.username}
                   </Nav.Link>
-                  <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+                  <Logout setUser={setUser} />
                 </>
               ) : (
                 <>
@@ -65,7 +60,7 @@ export function App() {
           <Route path="/products" element={<Products />} />
           <Route path="/addProduct" element={<AddProduct />} />
           <Route path="/search" element={<Search />} />
-          <Route path="/products/:id" element={<ProductDetail />} /> {/* Route mới */}
+          <Route path="/products/:id" element={<ProductDetail />} />
         </Routes>
       </Container>
 

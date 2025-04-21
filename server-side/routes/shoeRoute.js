@@ -86,27 +86,7 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch shoe details.' });
   }
 });
-const handleSave = (id, formData) => {
-  setIsUpdating(true);
-  axios
-    .put(`${process.env.REACT_APP_API_URL}/shoes/${id}`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data", // Đảm bảo gửi đúng định dạng
-      },
-    })
-    .then((response) => {
-      const updatedShoes = shoeList.map((shoe) =>
-        shoe._id === id ? response.data : shoe
-      );
-      setShoeList(updatedShoes);
-      setEditingId(null);
-      setIsUpdating(false);
-    })
-    .catch((error) => {
-      console.error("Error updating shoe:", error);
-      setIsUpdating(false);
-    });
-};
+
 router.put('/:id', upload.single('image'), async (req, res) => {
   try {
       const { type, name, sizes, color, price, stock } = req.body;
