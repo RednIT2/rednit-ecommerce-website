@@ -40,37 +40,37 @@ router.post('/signup', async (req, res) => {
 });
 
 // API làm mới Access Token
-router.post('/refreshToken', async (req, res) => {
-  const { token: refreshToken } = req.body;
+// router.post('/refreshToken', async (req, res) => {
+//   const { token: refreshToken } = req.body;
 
-  if (!refreshToken) {
-    return res.status(401).json({ message: 'Refresh token is required.' });
-  }
+//   if (!refreshToken) {
+//     return res.status(401).json({ message: 'Refresh token is required.' });
+//   }
 
-  try {
-    const user = await User.findOne({ 'refreshTokens.token': refreshToken });
-    if (!user) {
-      return res.status(403).json({ message: 'Invalid refresh token.' });
-    }
+//   try {
+//     const user = await User.findOne({ 'refreshTokens.token': refreshToken });
+//     if (!user) {
+//       return res.status(403).json({ message: 'Invalid refresh token.' });
+//     }
 
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, data) => {
-      if (err) {
-        return res.status(403).json({ message: 'Invalid or expired refresh token.' });
-      }
+//     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, data) => {
+//       if (err) {
+//         return res.status(403).json({ message: 'Invalid or expired refresh token.' });
+//       }
 
-      const accessToken = jwt.sign(
-        { id: user._id, username: user.username },
-        process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: '30s' }
-      );
+//       const accessToken = jwt.sign(
+//         { id: user._id, username: user.username },
+//         process.env.ACCESS_TOKEN_SECRET,
+//         { expiresIn: '30s' }
+//       );
 
-      res.json({ accessToken });
-    });
-  } catch (error) {
-    console.error('Error during token refresh:', error);
-    res.status(500).json({ message: 'Failed to refresh token.' });
-  }
-});
+//       res.json({ accessToken });
+//     });
+//   } catch (error) {
+//     console.error('Error during token refresh:', error);
+//     res.status(500).json({ message: 'Failed to refresh token.' });
+//   }
+// });
 
 // API đăng nhập
 router.post('/login', async (req, res) => {
