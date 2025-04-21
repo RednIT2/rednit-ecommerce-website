@@ -73,6 +73,48 @@ router.post('/signup', async (req, res) => {
 // });
 
 // API đăng nhập
+router.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ message: 'Username and password are required.' });
+  }
+
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid username or password.' });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid username or password.' });
+    }
+
+    const accessToken = jwt.sign(
+      { id: user._id, username: user.username },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: '30s' }
+    );
+    
+   
+
+    const refreshToken = jwt.sign(
+      { id: user._id, username: user.username },
+      process.env.REFRESH_TOKEN_SECRET
+    );
+
+    user.refreshTokens.push({ token: refreshToken });
+    await user.save();
+
+    res.json({ accessToken, refreshToken });
+  } catch (error) {
+    console.error('Error during login:', error);
+    res.status(500).json({ message: 'Failed to log in. Please try again later.' });
+  }
+});
+
+// API đăng xuất
 router.post('/logout', async (req, res) => {
   const { token: refreshToken } = req.body;
 
@@ -95,30 +137,6 @@ router.post('/logout', async (req, res) => {
     // Lưu thay đổi vào cơ sở dữ liệu
     await user.save();
     console.log('Refresh Token removed successfully');
-
-    res.json({ message: 'Logged out successfully.' });
-  } catch (error) {
-    console.error('Error during logout:', error);
-    res.status(500).json({ message: 'Failed to log out.' });
-  }
-});
-
-// API đăng xuất
-router.post('/logout', async (req, res) => {
-  const { token: refreshToken } = req.body;
-
-  if (!refreshToken) {
-    return res.status(401).json({ message: 'Refresh token is required.' });
-  }
-
-  try {
-    const user = await User.findOne({ 'refreshTokens.token': refreshToken });
-    if (!user) {
-      return res.status(403).json({ message: 'Invalid refresh token.' });
-    }
-
-    user.refreshTokens = user.refreshTokens.filter((t) => t.token !== refreshToken);
-    await user.save();
 
     res.json({ message: 'Logged out successfully.' });
   } catch (error) {
