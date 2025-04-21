@@ -73,44 +73,33 @@ router.post('/signup', async (req, res) => {
 // });
 
 // API đăng nhập
-router.post('/login', async (req, res) => {
-  const { username, password } = req.body;
+router.post('/logout', async (req, res) => {
+  const { token: refreshToken } = req.body;
 
-  if (!username || !password) {
-    return res.status(400).json({ message: 'Username and password are required.' });
+  if (!refreshToken) {
+    console.error('No Refresh Token provided');
+    return res.status(401).json({ message: 'Refresh token is required.' });
   }
 
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ 'refreshTokens.token': refreshToken });
     if (!user) {
-      return res.status(401).json({ message: 'Invalid username or password.' });
+      console.error('Refresh Token not found in database');
+      return res.status(403).json({ message: 'Invalid refresh token.' });
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid username or password.' });
-    }
+    // Xóa Refresh Token khỏi danh sách
+    user.refreshTokens = user.refreshTokens.filter((t) => t.token !== refreshToken);
+    console.log('Updated Refresh Tokens:', user.refreshTokens);
 
-    const accessToken = jwt.sign(
-      { id: user._id, username: user.username },
-      process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: '30s' }
-    );
-    
-   
-
-    const refreshToken = jwt.sign(
-      { id: user._id, username: user.username },
-      process.env.REFRESH_TOKEN_SECRET
-    );
-
-    user.refreshTokens.push({ token: refreshToken });
+    // Lưu thay đổi vào cơ sở dữ liệu
     await user.save();
+    console.log('Refresh Token removed successfully');
 
-    res.json({ accessToken, refreshToken });
+    res.json({ message: 'Logged out successfully.' });
   } catch (error) {
-    console.error('Error during login:', error);
-    res.status(500).json({ message: 'Failed to log in. Please try again later.' });
+    console.error('Error during logout:', error);
+    res.status(500).json({ message: 'Failed to log out.' });
   }
 });
 
