@@ -119,31 +119,24 @@ router.post('/logout', async (req, res) => {
   const { token: refreshToken } = req.body;
 
   if (!refreshToken) {
+    console.error('No Refresh Token provided');
     return res.status(401).json({ message: 'Refresh token is required.' });
   }
 
   try {
-    // Tìm người dùng có Refresh Token khớp
     const user = await User.findOne({ 'refreshTokens.token': refreshToken });
     if (!user) {
+      console.error('Refresh Token not found in database');
       return res.status(403).json({ message: 'Invalid refresh token.' });
     }
 
-    // Tìm vị trí của Refresh Token trong mảng
-    const index = user.refreshTokens.findIndex((t) => t.token === refreshToken);
-
-    if (index !== -1) {
-      // Xóa Refresh Token tại vị trí tìm được
-      user.refreshTokens.splice(index, 1);
-      console.log('Refresh Token removed at index:', index);
-    } else {
-      console.error('Refresh Token not found in user.refreshTokens');
-      return res.status(403).json({ message: 'Invalid refresh token.' });
-    }
+    // Xóa Refresh Token khỏi danh sách
+    user.refreshTokens = user.refreshTokens.filter((t) => t.token !== refreshToken);
+    console.log('Updated Refresh Tokens:', user.refreshTokens);
 
     // Lưu thay đổi vào cơ sở dữ liệu
     await user.save();
-    console.log('Updated Refresh Tokens:', user.refreshTokens);
+    console.log('Refresh Token removed successfully');
 
     res.json({ message: 'Logged out successfully.' });
   } catch (error) {
